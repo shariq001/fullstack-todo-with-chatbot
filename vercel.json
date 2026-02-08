@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "name": "phase2-todo-app",
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_BASE_URL": "https://mushariq-full-stack-todo.hf.space",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_usfaEr1c3MXR@ep-billowing-pine-aix5tlpa-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "BETTER_AUTH_SECRET": "rC2qUxXoaTcZV8uc1CtmM43P0bireTIF",
+    "NEXT_PUBLIC_BETTER_AUTH_URL": "https://full-stack-todo-hazel.vercel.app"
+  },
+  "_comment": {
+    "note": "For LOCAL development, see frontend/.env.local to switch to localhost URLs",
+    "local_backend": "http://localhost:8000",
+    "local_frontend": "http://localhost:3000",
+    "production_backend": "https://mushariq-full-stack-todo.hf.space",
+    "production_frontend": "https://full-stack-todo-hazel.vercel.app"
+  }
+}
