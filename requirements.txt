@@ -1,0 +1,27 @@
+# HuggingFace Spaces - Backend Dependencies
+# This file is used by HF Spaces to install dependencies
+
+# FastAPI & Web Framework
+fastapi==0.104.1
+uvicorn==0.24.0
+
+# Database
+sqlmodel>=0.0.21
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.9
+
+# Configuration
+python-dotenv==1.0.0
+pydantic-settings>=2.0.0
+
+# Authentication & Security
+PyJWT>=2.8.0
+
+# AI/ML
+google-generativeai>=0.3.0
+
+# Model Context Protocol (MCP)
+mcp[cli]>=1.26.0
+
+# Testing
+pytest==7.4.3
