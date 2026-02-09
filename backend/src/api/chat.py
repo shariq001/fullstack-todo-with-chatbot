@@ -65,12 +65,32 @@ async def chat(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
         )
-    except Exception:
+    except Exception as e:
         logger.exception("Unexpected error in chat endpoint")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="I'm sorry, I encountered an error processing your request. Please try again.",
-        )
+        error_msg = str(e)
+
+        # Handle database connection errors gracefully
+        if "connection" in error_msg.lower() or "server closed" in error_msg.lower():
+            logger.warning("Database connection error, retrying...")
+            # Retry once
+            try:
+                conversation_id, response_text = await process_chat_message(
+                    agent=agent,
+                    user_id=user_id,
+                    message=body.message.strip(),
+                    conversation_id=body.conversation_id,
+                )
+            except Exception as retry_error:
+                logger.error(f"Retry failed: {retry_error}")
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="Database service temporarily unavailable. Please try again.",
+                )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="I'm sorry, I encountered an error processing your request. Please try again.",
+            )
 
     duration = time.time() - start_time
     logger.info("Chat response in %.3fs: conversation_id=%s", duration, conversation_id)

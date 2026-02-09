@@ -10,15 +10,17 @@ if settings.database_url.startswith("sqlite"):
         connect_args={"check_same_thread": False},
     )
 else:
-    from sqlalchemy.pool import QueuePool
+    from sqlalchemy.pool import NullPool
+    # Use NullPool for Neon serverless to avoid connection pooling issues
     engine = create_engine(
         settings.database_url,
-        poolclass=QueuePool,
-        pool_size=20,
-        max_overflow=30,
-        pool_timeout=30,
-        pool_recycle=3600,
+        poolclass=NullPool,
         echo=settings.debug,
+        connect_args={
+            "connect_timeout": 10,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+        }
     )
 
 
