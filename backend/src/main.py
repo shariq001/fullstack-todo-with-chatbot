@@ -61,7 +61,8 @@ app.add_middleware(
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3002",
         "https://full-stack-todo-hazel.vercel.app",
-        "https://huggingface.co/spaces/mushariq/full-stack-todo"
+        "https://mushariq-full-stack-todo.hf.space",  # HF Spaces API domain
+        "https://huggingface.co",  # HF web domain (broader coverage)
     ],
     allow_credentials=True,
     allow_methods=["*"],
