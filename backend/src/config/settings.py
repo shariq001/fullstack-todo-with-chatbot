@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = str(BACKEND_DIR / ".env")
         env_file_encoding = "utf-8"
+        extra = "ignore"  # Ignore extra environment variables not defined in model
 
 
 # Create a single instance of settings
