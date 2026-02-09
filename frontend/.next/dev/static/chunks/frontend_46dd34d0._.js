@@ -13,7 +13,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$vanilla$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/frontend/node_modules/better-auth/dist/client/vanilla.mjs [app-client] (ecmascript)");
 ;
 const authClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$vanilla$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createAuthClient"])({
-    baseURL: ("TURBOPACK compile-time value", "http://localhost:3002") || "http://localhost:3000"
+    baseURL: ("TURBOPACK compile-time value", "http://localhost:3000") || "http://localhost:3000"
 });
 const __TURBOPACK__default__export__ = authClient;
 ;
@@ -184,7 +184,7 @@ class AuthService {
         }
     }
     static async forgotPassword(email) {
-        const baseURL = ("TURBOPACK compile-time value", "http://localhost:3002") || "http://localhost:3000";
+        const baseURL = ("TURBOPACK compile-time value", "http://localhost:3000") || "http://localhost:3000";
         const response = await fetch(`${baseURL}/api/auth/forget-password`, {
             method: 'POST',
             headers: {
@@ -201,7 +201,7 @@ class AuthService {
         return response.json();
     }
     static async resetPassword(token, newPassword) {
-        const baseURL = ("TURBOPACK compile-time value", "http://localhost:3002") || "http://localhost:3000";
+        const baseURL = ("TURBOPACK compile-time value", "http://localhost:3000") || "http://localhost:3000";
         const response = await fetch(`${baseURL}/api/auth/reset-password`, {
             method: 'POST',
             headers: {

@@ -61,6 +61,7 @@ app.add_middleware(
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3002",
         "https://full-stack-todo-hazel.vercel.app",
+        "https://huggingface.co/spaces/mushariq/full-stack-todo"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -83,4 +84,4 @@ async def read_current_user(authorization: str = Header(None)):
 @app.get("/")
 async def root():
     """Root endpoint."""
-    return {"message": "Backend Infrastructure API is running!"}
+    return {"message": "Backend Infrastructure API is running! Project by Muhammad Shariq"}

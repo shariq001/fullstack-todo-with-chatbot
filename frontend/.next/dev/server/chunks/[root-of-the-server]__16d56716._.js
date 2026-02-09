@@ -72,7 +72,7 @@ const pool = new __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$nod
 });
 const auth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$better$2d$auth$2f$dist$2f$auth$2f$full$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["betterAuth"])({
     secret: process.env.BETTER_AUTH_SECRET,
-    baseURL: ("TURBOPACK compile-time value", "http://localhost:3002") || "http://localhost:3000",
+    baseURL: ("TURBOPACK compile-time value", "http://localhost:3000") || "http://localhost:3000",
     database: pool,
     session: {
         expiresIn: 60 * 60 * 24,

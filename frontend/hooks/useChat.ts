@@ -23,6 +23,7 @@ import {
   ERROR_MESSAGES,
   STORAGE_KEYS,
 } from '@/constants/chat';
+import { getToken } from '@/src/auth/auth-utils';
 
 /**
  * Main chat hook for sending messages and managing conversation state
@@ -114,13 +115,31 @@ export const useChat = (): UseChatReturn => {
         );
 
         try {
+          // Get JWT token from localStorage (same as apiClient)
+          const token = await getToken();
+
+          console.log('🔐 Token retrieval:', {
+            tokenFound: !!token,
+            tokenLength: token ? token.length : 0
+          });
+
+          // Build headers
+          const headers: any = {
+            'Content-Type': 'application/json',
+          };
+
+          // Add JWT token if available
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+            console.log('✓ Authorization header set with Bearer token');
+          } else {
+            console.warn('⚠️ No token found in localStorage');
+          }
+
           // Call API
           const response = await fetch(CHAT_API_URL, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              // JWT will be auto-injected by Next.js middleware if present
-            },
+            headers,
             body: JSON.stringify(request),
             signal: controller.signal,
             credentials: 'include', // Include cookies for authentication
@@ -245,15 +264,25 @@ export const useChat = (): UseChatReturn => {
         );
 
         try {
+          // Get JWT token from localStorage
+          const token = await getToken();
+
+          // Build headers with authorization
+          const headers: any = {
+            'Content-Type': 'application/json',
+          };
+
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
           // Fetch conversation history from backend
           // Uses GET request with conversation_id as query parameter
           const response = await fetch(
             `${CHAT_API_URL}?conversation_id=${encodeURIComponent(conversationId)}`,
             {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers,
               signal: controller.signal,
               credentials: 'include', // Include cookies for authentication
             }
