@@ -46,7 +46,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://full-stack-todo-hazel.vercel.app", # Your Frontend
+    "https://frontend-drab-eight-71.vercel.app/", # Your Frontend
     "https://mushariq-full-stack-todo.hf.space", # Your Backend Space
     "https://huggingface.co"
 ]
