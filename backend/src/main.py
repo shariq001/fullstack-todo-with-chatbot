@@ -15,8 +15,14 @@ from .services.agent_service import init_gemini_client, create_agent
 async def lifespan(app: FastAPI):
     """Lifespan event handler."""
     logging.info("Application starting up...")
-    create_db_and_tables()
-    logging.info("Database tables created/verified.")
+
+    # Initialize database with error handling
+    try:
+        create_db_and_tables()
+        logging.info("Database tables created/verified.")
+    except Exception as e:
+        logging.error(f"Failed to initialize database tables: {e}")
+        logging.warning("Continuing startup despite database initialization error...")
 
     # Initialize Gemini API client and create agent
     try:
@@ -25,8 +31,7 @@ async def lifespan(app: FastAPI):
         logging.info("Gemini API client and AI agent initialized.")
     except Exception as e:
         logging.error(f"Failed to initialize Gemini agent: {e}")
-        # Consider if you want the app to crash or just log the error
-        # raise 
+        logging.warning("Continuing startup despite Gemini initialization error...")
 
     yield
 

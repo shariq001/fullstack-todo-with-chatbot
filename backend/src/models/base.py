@@ -17,7 +17,7 @@ else:
         poolclass=NullPool,
         echo=settings.debug,
         connect_args={
-            "connect_timeout": 10,
+            "connect_timeout": 30,  # Increased from 10 to 30 seconds for serverless
             "keepalives": 1,
             "keepalives_idle": 30,
         }
