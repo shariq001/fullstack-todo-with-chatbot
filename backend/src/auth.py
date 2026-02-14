@@ -49,8 +49,13 @@ def verify_jwt_token(token: str) -> TokenData:
         return None  # Return None on any JWT error
 
 
-def get_current_user_from_token(authorization: str = None) -> User:
-    """Extract and verify user from authorization header."""
+def get_current_user_from_token(authorization: str = None, session: Session = None) -> User:
+    """Extract and verify user from authorization header.
+
+    Args:
+        authorization: Bearer token from Authorization header
+        session: Optional database session (required for avoiding nested sessions)
+    """
     user_id = None
     email = None
 
@@ -67,21 +72,30 @@ def get_current_user_from_token(authorization: str = None) -> User:
         user_id = "test-user"
         email = "test@localhost"
 
-    with Session(engine) as session:
-        existing_user = session.query(User).filter(User.id == user_id).first()
+    # Use provided session or create a temporary one
+    if session is None:
+        with Session(engine) as session:
+            return _get_or_create_user(session, user_id, email)
+    else:
+        return _get_or_create_user(session, user_id, email)
 
-        if not existing_user:
-            # Auto-create user
-            new_user = User(
-                id=user_id,
-                email=email,
-                name="Test User",
-                hashed_password="",
-                is_active=True
-            )
-            session.add(new_user)
-            session.commit()
-            session.refresh(new_user)
-            return new_user
-        else:
-            return existing_user
+
+def _get_or_create_user(session: Session, user_id: str, email: str) -> User:
+    """Helper to get or create user within an existing session."""
+    existing_user = session.query(User).filter(User.id == user_id).first()
+
+    if not existing_user:
+        # Auto-create user
+        new_user = User(
+            id=user_id,
+            email=email,
+            name="Test User",
+            hashed_password="",
+            is_active=True
+        )
+        session.add(new_user)
+        session.commit()
+        session.refresh(new_user)
+        return new_user
+    else:
+        return existing_user

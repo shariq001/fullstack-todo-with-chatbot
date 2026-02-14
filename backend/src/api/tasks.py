@@ -38,7 +38,8 @@ async def get_tasks(
     """
     try:
         logger.info("Getting tasks for user...")
-        current_user = get_current_user_from_token(authorization)
+        # Pass the session to avoid opening a new one
+        current_user = get_current_user_from_token(authorization, session=db_session)
         logger.info(f"Fetching tasks for user: {current_user.id}")
         tasks = get_tasks_by_user_id(db_session, current_user.id)
         logger.info(f"✓ Successfully retrieved {len(tasks)} tasks")
@@ -77,7 +78,7 @@ async def get_task(
     Raises:
         HTTPException: 404 if task doesn't exist or doesn't belong to user
     """
-    current_user = get_current_user_from_token(authorization)
+    current_user = get_current_user_from_token(authorization, session=db_session)
     task = get_task_by_id_and_user(db_session, task_id, current_user.id)
     if not task:
         raise HTTPException(
@@ -107,7 +108,7 @@ async def create_task(
     Raises:
         HTTPException: 422 if validation fails
     """
-    current_user = get_current_user_from_token(authorization)
+    current_user = get_current_user_from_token(authorization, session=db_session)
     task_data = task_create.model_dump()
     task_data['user_id'] = current_user.id
     task_data['created_at'] = datetime.utcnow()
@@ -140,7 +141,7 @@ async def update_task(
         HTTPException: 422 if validation fails
     """
     # Get current user from token
-    current_user = get_current_user_from_token(authorization)
+    current_user = get_current_user_from_token(authorization, session=db_session)
 
     # Check if the task exists and belongs to the user
     existing_task = get_task_by_id_and_user(db_session, task_id, current_user.id)
@@ -190,7 +191,7 @@ async def delete_task(
     Raises:
         HTTPException: 404 if task doesn't exist or doesn't belong to user
     """
-    current_user = get_current_user_from_token(authorization)
+    current_user = get_current_user_from_token(authorization, session=db_session)
     success = delete_task_by_id_and_user(db_session, task_id, current_user.id)
     if not success:
         raise HTTPException(

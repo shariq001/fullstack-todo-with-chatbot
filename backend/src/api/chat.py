@@ -31,7 +31,7 @@ async def chat(
     """
     start_time = time.time()
 
-    # Authenticate user
+    # Authenticate user (chat endpoint creates its own session for the auth function)
     current_user = get_current_user_from_token(authorization)
     user_id = current_user.id
     logger.info("Chat request received: user_id=%s, conversation_id=%s", user_id, body.conversation_id)
