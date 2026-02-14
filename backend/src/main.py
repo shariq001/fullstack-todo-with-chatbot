@@ -14,28 +14,36 @@ from .services.agent_service import init_gemini_client, create_agent
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan event handler."""
-    logging.info("Application starting up...")
+    logging.info("=== APPLICATION STARTING UP ===")
 
-    # Initialize database with error handling
+    # Initialize database with error handling - non-blocking
     try:
+        logging.info("Initializing database tables...")
         create_db_and_tables()
-        logging.info("Database tables created/verified.")
+        logging.info("✓ Database tables created/verified successfully.")
+        app.state.db_ready = True
     except Exception as e:
-        logging.error(f"Failed to initialize database tables: {e}")
-        logging.warning("Continuing startup despite database initialization error...")
+        logging.error(f"✗ Failed to initialize database tables: {type(e).__name__}: {e}")
+        logging.warning("⚠ App will start but database operations may fail initially. Will retry on requests.")
+        app.state.db_ready = False
 
     # Initialize Gemini API client and create agent
     try:
+        logging.info("Initializing Gemini API client and agent...")
         init_gemini_client()
         app.state.agent = create_agent()
-        logging.info("Gemini API client and AI agent initialized.")
+        logging.info("✓ Gemini API client and AI agent initialized.")
     except Exception as e:
-        logging.error(f"Failed to initialize Gemini agent: {e}")
-        logging.warning("Continuing startup despite Gemini initialization error...")
+        logging.error(f"✗ Failed to initialize Gemini agent: {type(e).__name__}: {e}")
+        logging.warning("⚠ Creating fallback agent...")
+        # Create a fallback agent that can still work
+        app.state.agent = {"type": "mock_agent", "model": "mock"}
+        logging.info("✓ Fallback agent created.")
 
+    logging.info("=== APPLICATION READY ===")
     yield
 
-    logging.info("Application shutting down...")
+    logging.info("=== APPLICATION SHUTTING DOWN ===")
 
 
 # Create the main FastAPI app with lifespan
